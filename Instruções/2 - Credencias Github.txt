@@ -1,0 +1,19 @@
+🚀 Prepare-se para turbinar sua experiência! 🚀
+
+Utilizaremos os seguintes repositórios para a instalação:
+
+GitHub - Instalador: 🧰 https://github.com/launcherbr/instalador.git
+Código: 💻 https://github.com/launcherbr/whaticketsaas.git
+Com estes repositórios, você terá acesso às ferramentas e códigos necessários para configurar e personalizar seu ambiente. ⚙️
+
+Fique ligado para mais instruções e dicas durante o processo de instalação! 😉
+
+🔒 Repositórios privados no GitHub são como cofres digitais 🧰 para seus projetos. Só quem tem a chave 🔑 - ou seja, login e permissão na organização 🏢 - consegue acessar o código 💻 e os arquivos dentro deles. 🔒
+
+Credenciais para Instalação 🧑‍💻
+
+Durante a instalação, você será solicitado a fornecer as credenciais de usuário e token para acessar os recursos do GitHub.
+
+Usuário: palmeirarocha 🧑
+
+Token: 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 🤫

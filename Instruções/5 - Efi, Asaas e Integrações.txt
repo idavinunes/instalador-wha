@@ -1,0 +1,67 @@
+🚀 Habilitando a Gerencianet (EFI) e Personalizando o Sistema: 🚀
+
+Para habilitar a Gerencianet (EFI) e configurar o retorno automático de pagamentos, você precisará de uma aplicação como Insomnia ou Postman. Siga os passos abaixo:
+
+1️⃣ Configurar o backend:
+
+Abra o arquivo .env na pasta backend da sua aplicação.
+Adicione as seguintes linhas, substituindo os valores pelos seus dados da Gerencianet:
+GERENCIANET_SANDBOX=false
+GERENCIANET_CLIENT_ID=Client_Id_Gerencianet
+GERENCIANET_CLIENT_SECRET=Client_Secret_Gerencianet
+GERENCIANET_PIX_CERT=certificado-Gerencianet
+GERENCIANET_PIX_KEY=chave pix gerencianet
+Salve o certificado da Gerencianet no formato .p12 na pasta backend\certs.
+
+2️⃣ Atualizar a aplicação:
+
+No terminal SSH, navegue até o diretório do seu aplicativo.
+Dê permissão de execução ao script update:
+
+chmod 777 update
+
+Execute o script update:
+./update
+
+3️⃣ Configurar o Webhook:
+
+Consulte o PDF no Google Drive para obter instruções detalhadas sobre como configurar o webhook da Gerencianet. O webhook é essencial para receber notificações automáticas sobre o status dos pagamentos.
+Observações:
+
+Certifique-se de que as informações da Gerencianet no arquivo .env estejam corretas.
+O script update pode levar alguns minutos para ser executado.
+A configuração do webhook pode variar dependendo da sua aplicação e da versão da API da Gerencianet.
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+🎫 Habilitando o Envio de 2ª Via de Boletos Asaas: 🎫
+
+Para habilitar o envio de 2ª via de boletos Asaas no seu sistema, siga estas etapas:
+
+1️⃣ Obter a chave da API Asaas:
+
+Acesse o site da Asaas e faça login na sua conta.
+Vá para a seção de configurações da API e gere uma nova chave.
+Copie a chave da API.
+
+2️⃣ Inserir a chave da API no sistema:
+
+No seu sistema, acesse a seção de configurações.
+Procure o campo para inserir a chave da API Asaas.
+Cole a chave da API que você copiou no passo anterior.
+Salve as configurações.
+
+3️⃣ Criar uma fila de atendimento:
+
+Vá para a seção de filas de atendimento.
+Clique em "Criar nova fila".
+Preencha os campos com as seguintes informações:
+Nome: 2ª Via de Boleto
+Mensagem de saudação: Por favor, nos forneça o CPF/CNPJ para consultarmos na nossa base de dados.
+Salve a fila de atendimento.
+Observações:
+
+Certifique-se de que a chave da API Asaas que você inseriu esteja correta.
+A fila de atendimento "2ª Via de Boleto" será usada para processar as solicitações de 2ª via de boletos.
+Você pode personalizar a mensagem de saudação da fila de atendimento de acordo com suas preferências.
+Com estas etapas, você terá habilitado o envio de 2ª via de boletos Asaas no seu sistema. Agora, seus clientes podem solicitar a 2ª via de boletos de forma rápida e fácil através da fila de atendimento dedicada. 🎉

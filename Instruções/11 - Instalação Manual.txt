@@ -1,0 +1,278 @@
+Lembre-se:
+
+Substitua os campos _____ _____ pelos valores corretos.
+
+Fazer login:
+
+Usuário padrão: admin@admin.com
+Senha: 123456
+
+*** Nunca delete este usuário, e ao editar os dados não se esqueça de 
+preencher a senha atual ou uma nova senha.
+
+Formulário de Cadastro: /signup
+
+================================================================================
+INSTALAÇÃO UBUNTU 22 COM DOCKER
+================================================================================
+
+Servidor >>
+IP: _____
+IPV6: _____
+Usuário: root
+senha: _____
+
+Front = endereço principal do chatbot: _____app.dominio.com_____
+Backend/API = endereço da api interna: _____api.dominio.com_____
+app: celtainfo (nome do app, nome curto - sem letras maiúsculas e caracteres especiais)
+
+Senha deploy: _____senha do user deploy, somente letras e números, 
+sem letras maiúscula e caracteres especiais; recomendado 8 caracteres_____
+
+Github - Código
+https://github.com/launcherbr/whaticketsaas.git
+
+================================================================================
+
+ATUALIZAR A VPS
+sudo apt update && sudo apt -y upgrade
+
+INSTALAR O NODE E POSTGRES
+
+sudo su root
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+apt-get install -y nodejs
+npm install -g npm@latest
+
+sudo sh -c 'echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+sudo apt update -y
+sudo apt-get update -y && sudo apt-get -y install postgresql-16
+sudo timedatectl set-timezone America/Sao_Paulo
+
+INSTALAR O DOCKER
+
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+apt-cache policy docker-ce
+sudo apt install docker-ce
+
+INSTALAR O PUPPETEER
+apt-get install -y libxshmfence-dev libgbm-dev wget unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils
+
+INSTALAR O PM2
+npm install -g pm2
+
+INSTALAR O SNAPD
+apt install -y snapd
+snap install core
+snap refresh core
+
+INSTALAR O NGINX
+apt install -y nginx
+rm /etc/nginx/sites-enabled/default
+service nginx restart
+sudo nano /etc/nginx/nginx.conf
+client_max_body_size 100M;
+underscores_in_headers on;
+
+INSTALAR O CERTBOT
+apt-get remove certbot
+snap install --classic certbot
+ln -s /snap/bin/certbot /usr/bin/certbot
+
+CRIAR USUARIO DEPLOY = 
+adduser deploy
+usermod -aG sudo deploy
+
+# Preencher apenas a senha, pressione Enter para os campos de dados pessoais.
+
+================================================================================
+BACKEND
+================================================================================
+
+***** CRIAR O REDIS E BANCO POSTGRES
+# Senha do banco fica entre '' (aspas simples)
+
+sudo su root
+usermod -aG docker deploy
+docker run --name redis-_____nomeredis_____ -p 5000:6379 --restart always --detach redis redis-server --requirepass _____senharedis_____
+sudo su - postgres
+createdb _____nomebanco_____;
+psql
+CREATE USER _____userbanco_____ SUPERUSER INHERIT CREATEDB CREATEROLE;
+ALTER USER _____userbanco_____ PASSWORD '_____senhauser_____';
+\q
+exit
+
+================================================================================
+**** CRIAR VARIAVEL DE AMBIENTE
+
+---- Utilizando usuario deploy no diretório backend ----
+
+cd /home/deploy/_____nome do app_____/backend
+ls 
+sudo nano .env
+
+------------ Editar o arquivo com os dados abaixo --------------
+https://github.com/launcherbr/whaticketsaas/edit/master/backend/.env.example
+
+NODE_ENV=
+BACKEND_URL=https://_____dominio do backend_____
+FRONTEND_URL=https://_____dominio do frontend_____
+PROXY_PORT=443
+PORT=4000
+
+DB_DIALECT=postgres
+DB_HOST=localhost
+DB_TIMEZONE=-03:00
+DB_PORT=5432
+DB_USER=_____userbanco_____
+DB_PASS=_____senhauser_____
+DB_NAME=_____nomebanco_____
+
+rootPath=/var/www/backend
+
+JWT_SECRET=kZaOTd+YZpjRUyyuQUpigJaEMk4vcW4YOymKPZX0Ts8=
+JWT_REFRESH_SECRET=dBSXqFg9TaNUEDXVp6fhMTRLBysP+j2DSqf7+raxD3A=
+
+REDIS_URI=redis://_____senharedis_____@127.0.0.1:5000
+REDIS_OPT_LIMITER_MAX=1
+REDIS_OPT_LIMITER_DURATION=3000
+
+USER_LIMIT=10000
+CONNECTIONS_LIMIT=100000
+CLOSED_SEND_BY_ME=true
+
+================================================================================
+INSTALAÇÃO DAS DEPENDENCIAS
+---- Utilizando usuario deploy no diretório backend ----
+cd /home/deploy/_____nome do app_____/backend
+npm install
+
+================================================================================
+COMPILANDO O CÓDIGO DO BACKEND
+---- Utilizando usuario deploy no diretório backend ----
+cd /home/deploy/_____nome do app_____/backend
+npm run build
+
+================================================================================
+CRIANDO AS TABELAS NO BANCO
+----Utilizando usuario deploy no diretório backend----
+cd /home/deploy/_____nome do app_____/backend
+npx sequelize db:migrate
+
+PUPULANDO AS TABELAS DO BANCO
+----Utilizando usuario deploy no diretório backend----
+cd /home/deploy/_____nome do app_____/backend
+npx sequelize db:seed:all
+
+INICIANDO O SERVIÇO PM2
+----Utilizando usuario deploy no diretório backend----
+cd /home/deploy/_____nome do app_____/backend
+pm2 start dist/server.js --name _____nome do app_____-backend
+pm2 save --force
+
+CONFIGURAÇÃO DO NGINX
+----Utilizando usuario root no diretório etc----
+sudo nano /etc/nginx/sites-available/_____nome do app_____-backend
+
+server {
+  server_name _____dominio do backend_____;
+  location / {
+    proxy_pass http://127.0.0.1:4000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection   
+ 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-Proto   
+ $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_cache_bypass $http_upgrade;   
+
+  }
+}
+
+---- Gerando link simbólico ----
+ln -s /etc/nginx/sites-available/_____nome do app_____-backend /etc/nginx/sites-enabled
+
+================================================================================
+FRONTEND
+================================================================================
+CRIAR VARIAVEL DE AMBIENTE
+---- Utilizando usuario deploy no diretório frontend----
+cd /home/deploy/_____nome do app_____/frontend
+sudo nano .env
+
+REACT_APP_BACKEND_URL=https://_____api.dominio.com_____
+REACT_APP_HOURS_CLOSE_TICKETS_AUTO = 24
+
+INSTALANDO DEPENDENCIAS DO FRONTEND
+---- Utilizando usuario deploy no diretório frontend ----
+cd /home/deploy/_____nome do app_____/frontend
+npm install
+
+COMPILANDO O CÓDIGO DO FRONTEND
+---- Utilizando usuario deploy no diretório frontend ----
+cd /home/deploy/_____nome do app_____/frontend
+npm run build
+
+INICIANDO O PM2
+---- Utilizando usuario deploy no diretório frontend ----
+cd /home/deploy/_____nome do app_____/frontend
+pm2 start server.js --name _____nome do app_____-frontend
+pm2 save --force
+
+----Configuração para o PM2 iniciar com o Ubuntu----
+pm2 startup
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u deploy --hp /home/deploy
+
+CONFIGURAÇÃO DO NGINX
+---- Utilizando usuario root no diretório etc ----
+sudo nano /etc/nginx/sites-available/_____nome do app_____-frontend
+
+server {
+  server_name _____dominio do frontend_____;
+  location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header   
+ Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-Proto   
+ $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_cache_bypass $http_upgrade;   
+
+  }
+}
+
+---- Gerando link simbólico ----
+sudo ln -s /etc/nginx/sites-available/_____nome do app_____-frontend /etc/nginx/sites-enabled
+
+RODAR O CERTBOT PARA GERAR O SSL
+certbot -m seuemail@gmail.com --nginx --agree-tos --non-interactive --domains _____dominio do frontend_____,_____dominio do backend_____
+
+================================================================================
+
+* Correção, caso `pm2 status` não liste os apps após reiniciar:
+
+sudo su - deploy
+cd /home/deploy/_____nome do app_____/frontend
+sudo pm2 start server.js --name _____nome do app_____-frontend
+sudo pm2 save --force
+
+sudo su - deploy
+cd /home/deploy/_____nome do app_____/backend
+sudo pm2 start dist/server.js --name _____nome do app_____-backend
+sudo pm2 save --force
+
+* Caso o problema persista após reiniciar novamente, repetir os comandos acima e incluir:
+sudo su - root
+pm2 startup
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u deploy --hp /home/deploy

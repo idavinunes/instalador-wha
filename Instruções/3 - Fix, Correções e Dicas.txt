@@ -1,0 +1,441 @@
+⚠️ ATENÇÃO! Cuidados importantes após a instalação: ⚠️
+
+1️⃣ Usuário Admin: ⛔ Nunca delete o usuário admin (ID 1) e a empresa criada durante a instalação!
+
+2️⃣ Editar Superadmin: ✍️ Ao editar os dados do usuário superadmin, preencha o campo "senha atual" ou defina uma nova senha.
+
+⚠️ IMPORTANTE: Se você deixar o campo de senha em branco, o sistema salvará a senha como vazia no banco de dados.
+
+3️⃣ Habilitar Campanhas: 🚀 Para habilitar o envio de campanhas, acesse "Configurações" ⚙️ e depois "Empresas". 🏢 Após ativar as campanhas, faça logout e login novamente para que o menu de campanhas apareça. 🔄
+
+4️⃣ Plano 1: 🗑️ O Plano 1 pode ser excluído. Ele não permite a alteração do nome, mas, ao excluí-lo, lembre-se de vincular um novo plano à empresa 1. 🔄 Caso contrário, você não poderá adicionar conexões, filas e novos usuários.
+
+5️⃣ Gerenciamento de Horários: ⏰ Ao mudar o gerenciamento de horários (por fila ou por empresa), limpe os campos preenchidos da opção atual.
+Exemplo: se você mudar de um gerenciamento de horário por fila para por empresa, acesse os horários das filas e deixe os campos em branco para apagar as informações do banco de dados. 🗑️
+Faça o mesmo ao trocar de um gerenciamento de horário de empresa para fila ou ao desativar os horários, limpando os campos atualmente ativos.
+
+Seguindo essas dicas, você garante o bom funcionamento do sistema e evita problemas de configuração. 😉
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+🚨 Resolvendo Erros Internos Após a Instalação: 🚨
+
+Se você encontrar um erro interno após a instalação, siga estes passos para repopular o banco de dados:
+
+1️⃣ Acesse o diretório do backend:
+
+cd /home/deploy/***/backend 
+
+Substitua *** pelo nome da sua instância.
+
+2️⃣ Execute os comandos para migrar e popular o banco de dados:
+
+npx sequelize db:migrate
+npx sequelize db:seed:all
+
+3️⃣ Acesse o usuário "deploy":
+
+su deploy
+
+4️⃣ Reinicie todos os processos e limpe os logs:
+
+pm2 restart all
+pm2 flush 0
+pm2 flush 1
+
+Explicação dos comandos:
+
+npx sequelize db:migrate: Executa as migrações do banco de dados, garantindo que a estrutura esteja correta. 🏗️
+npx sequelize db:seed:all: Popula o banco de dados com dados iniciais, como configurações padrão e permissões. 🌱
+pm2 restart all: Reinicia todos os processos gerenciados pelo PM2, incluindo o frontend e o backend. 🔄
+pm2 flush 0 e pm2 flush 1: Limpa os logs dos processos, removendo informações antigas que podem estar causando conflitos. 🧹
+Após seguir esses passos, o erro interno deve ser corrigido. ✨ Se o problema persistir, consulte a documentação ou procure ajuda no suporte técnico. 🧑‍💻
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+🛠️ Corrigindo erros de atualização de página no Nginx: 🛠️
+
+Parece que você está enfrentando problemas com o Nginx e a atualização de páginas. Adicionar o cabeçalho underscores_in_headers on; pode resolver esse problema.
+
+Siga estes passos:
+
+1️⃣ Acesse o arquivo de configuração do Nginx:
+
+nano /etc/nginx/nginx.conf
+
+2️⃣ Adicione o cabeçalho:
+
+Procure a linha # server_tokens off; no arquivo e adicione a linha underscores_in_headers on; logo acima dela.
+
+Seu arquivo nginx.conf deve ficar parecido com isto:
+
+...
+underscores_in_headers on;
+# server_tokens off;
+...
+
+3️⃣ Salve as alterações:
+
+Pressione Ctrl + X, depois Y e Enter para salvar as alterações no arquivo.
+
+4️⃣ Teste a configuração do Nginx:
+
+nginx -t
+
+Se o teste retornar "OK", a configuração está correta. 👍
+
+5️⃣ Recarregue o serviço Nginx:
+
+service nginx reload
+
+Isso aplicará as alterações sem precisar reiniciar completamente o servidor. 🔄
+
+Explicação:
+
+O cabeçalho underscores_in_headers on; permite que o Nginx processe cabeçalhos HTTP que contenham underscores ( _ ), o que pode ser necessário para algumas aplicações web que usam esse caractere em seus cabeçalhos.
+
+Dicas:
+
+Se o erro persistir, verifique o log de erros do Nginx para obter mais informações sobre o problema. 🕵️‍♂️
+Certifique-se de que você tem permissões de root ou sudo para editar o arquivo nginx.conf. 🧑‍🔧
+Se você não tiver certeza de como editar arquivos de configuração, peça ajuda a um profissional. 👨‍💻
+Espero que isso ajude a resolver o problema! 😉
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+🚨 Corrigindo o PM2 após o Reboot: 🚨
+
+Se, após reiniciar o servidor, o comando pm2 status não listar suas aplicações, siga estes passos para corrigir o problema:
+
+1️⃣ Reinicie as aplicações manualmente:
+
+Frontend:
+
+sudo su - deploy
+cd /home/deploy/*nome do app*/frontend
+sudo pm2 start server.js --name *nome do app*-frontend
+sudo pm2 save --force
+
+Backend:
+
+sudo su - deploy
+cd /home/deploy/nome do app/backend
+sudo pm2 start dist/server.js --name *nome do app*-backend
+sudo pm2 save --force
+
+Substitua *nome do app* pelo nome real da sua aplicação.
+
+2️⃣ Configure o PM2 para iniciar automaticamente na inicialização do sistema:
+
+Caso o problema persista após reiniciar o servidor novamente, execute os seguintes comandos como root:
+
+sudo su - root
+pm2 startup
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u deploy --hp /home/deploy
+
+Explicação dos comandos:
+
+pm2 start server.js --name *nome do app*-frontend: Inicia a aplicação frontend com o PM2 e define um nome para ela.
+pm2 start dist/server.js --name *nome do app*-backend: Inicia a aplicação backend com o PM2 e define um nome para ela.
+pm2 save --force: Salva a configuração atual do PM2, incluindo as aplicações que foram iniciadas.
+pm2 startup: Gera o comando necessário para configurar o PM2 para iniciar automaticamente na inicialização do sistema.
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u deploy --hp /home/deploy: Configura o PM2 para iniciar como um serviço systemd com o usuário "deploy".
+Observações:
+
+Esses comandos devem ser executados como root.
+Certifique-se de que o PM2 esteja instalado corretamente em seu servidor.
+Se você ainda tiver problemas, consulte a documentação do PM2 para obter mais informações sobre como configurar a inicialização automática.
+Com essas correções, suas aplicações devem iniciar automaticamente após a reinicialização do servidor e o pm2 status listará os aplicativos corretamente. 😉
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+🚀 Reinicialização Programada das Aplicações Node com Cron Jobs: 🚀
+
+Para garantir o bom funcionamento do Baileys e evitar problemas de conexão, vamos configurar reinicializações programadas do frontend e backend usando o cron.
+
+1️⃣ Acesse o editor de crontab:
+
+crontab -e
+
+Se solicitado, escolha seu editor de texto preferido. Usaremos o nano como exemplo.
+
+2️⃣ Adicione a linha de comando para reiniciar as aplicações a cada 12 horas:
+
+0 */12 * * * /usr/bin/node /usr/bin/pm2 restart all
+
+* Explicação do comando:
+0 */12 * * *: Define a execução do comando a cada 12 horas (às 00:00 e 12:00).
+/usr/bin/node /usr/bin/pm2 restart all: Utiliza o Node.js para executar o comando pm2 restart all, que reinicia todas as aplicações gerenciadas pelo PM2.
+
+3️⃣ Salve as alterações no crontab:
+
+No nano, pressione Ctrl + X, depois Y e Enter.
+
+Outras opções de configuração:
+
+Você pode ajustar o intervalo de reinicialização no crontab de acordo com suas necessidades.
+Para gerar diferentes modelos de cron, utilize os sites:
+https://crontab.guru/
+https://crontab-generator.org/
+https://crontab.cronhub.io/
+
+Observações:
+
+O comando pm2 restart all reinicia todos os processos gerenciados pelo PM2. Se você quiser reiniciar apenas as aplicações do Baileys, especifique os nomes dos processos no comando.
+Certifique-se de que o PM2 esteja instalado e configurado corretamente em seu servidor.
+Monitorar os logs do sistema e das aplicações após implementar a reinicialização programada é importante para identificar possíveis problemas.
+Com essa configuração, você garante que as aplicações Node.js sejam reiniciadas regularmente, minimizando problemas de conexão e mantendo o Baileys funcionando sem interrupções. 🎉
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+🧰 Comandos Úteis para Node.js e PM2: 🧰
+
+Aqui estão alguns comandos que podem ser úteis para gerenciar suas aplicações Node.js com o PM2:
+
+Build/Re-build:
+
+sudo npm run build
+
+Este comando executa o script de build definido no seu arquivo package.json, geralmente usado para compilar e preparar o código para produção.
+Atualizar bibliotecas:
+
+npm update --force
+
+Atualiza todas as dependências do seu projeto para as versões mais recentes. O --force força a atualização mesmo se houver conflitos de versão.
+Reiniciar PM2:
+
+pm2 restart all
+
+Reinicia todos os processos gerenciados pelo PM2.
+Logs:
+
+pm2 log
+
+Exibe os logs de todos os processos gerenciados pelo PM2.
+Limpeza de logs:
+
+pm2 flush <id>
+
+Limpa os logs do processo com o ID especificado. Substitua <id> pelo ID do processo.
+Dicas:
+
+Utilize o comando pm2 list para visualizar a lista de processos gerenciados pelo PM2 e seus IDs.
+O PM2 possui muitos outros comandos úteis. Consulte a documentação do PM2 para mais informações: https://pm2.keymetrics.io/docs/usage/quick-start/
+Espero que esta lista seja útil! 😉
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+🐘 Acessando o PostgreSQL com PGAdmin4 e Túnel SSH: 🐘
+
+Para acessar o banco de dados PostgreSQL da sua aplicação, você pode usar o PGAdmin4 com um túnel SSH. Isso garante uma conexão segura e criptografada, protegendo suas credenciais.
+
+Siga estes passos:
+
+1️⃣ Obtenha as credenciais do banco de dados:
+
+Acesse o arquivo .env na pasta backend da sua aplicação.
+Anote os valores das seguintes variáveis:
+DB_HOST
+DB_USER
+DB_PASS
+DB_NAME
+DB_PORT
+
+2️⃣ Configure o túnel SSH no PGAdmin4:
+
+Abra o PGAdmin4 e clique com o botão direito em "Servers" na barra lateral.
+
+Selecione "Create" -> "Server..."
+
+Na aba "General", dê um nome ao seu servidor.
+
+Na aba "Connection":
+
+Host name/address: localhost (ou 127.0.0.1)
+Port: A porta que você configurou para o túnel SSH (ex: 5432).
+Maintenance database: postgres
+Username: O valor da variável DB_USER do arquivo .env.
+Password: O valor da variável DB_PASS do arquivo .env.
+Clique na aba "SSH Tunnel" e marque a opção "Use SSH Tunnel".
+
+Preencha os campos com as informações do seu servidor:
+
+Hostname: O endereço IP do seu servidor.
+Port: A porta SSH padrão (geralmente 22).
+Username: O nome de usuário root do seu servidor.
+Authentication: Selecione "Password" e digite a senha do usuário root.
+
+3️⃣ Salve a configuração e conecte-se ao servidor:
+
+Clique em "Save" para salvar a configuração do servidor.
+Agora você pode se conectar ao servidor clicando duas vezes no nome dele na barra lateral do PGAdmin4.
+Observações:
+
+Certifique-se de que o PGAdmin4 esteja instalado na sua máquina local.
+Se você estiver usando uma chave SSH para autenticar no servidor, selecione a opção "Key file" na aba "SSH Tunnel" e informe o caminho para sua chave privada.
+Se você tiver um firewall ativo na sua máquina local, certifique-se de que a porta que você configurou para o túnel SSH esteja aberta.
+Com essas instruções, você poderá acessar seu banco de dados PostgreSQL de forma segura e gerenciar seus dados com o PGAdmin4. 🐘
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+🔴 Testando a Conexão e Autenticação do Redis: 🔴
+
+É importante garantir que o Redis esteja configurado corretamente e que a senha definida funcione para proteger seu banco de dados de agendamento.
+
+Siga estes passos para testar a conexão e autenticação:
+
+1️⃣ Identifique o ID do contêiner Docker do Redis:
+
+docker ps
+
+Anote o CONTAINER ID do Redis na lista exibida.
+
+2️⃣ Acesse o contêiner do Redis:
+
+docker exec -it <CONTAINER ID> bash
+
+Substitua <CONTAINER ID> pelo ID que você anotou no passo anterior.
+
+3️⃣ Conecte-se ao cliente Redis:
+
+redis-cli
+
+4️⃣ Tente definir uma chave antes da autenticação (este comando deve falhar):
+
+set teste 123
+Você deve receber a mensagem de erro: (error) NOAUTH Authentication required.
+
+5️⃣ Autentique-se com a senha definida no arquivo de configuração do Redis:
+
+auth sua_senha
+
+Substitua sua_senha pela senha real que você configurou.
+
+6️⃣ Teste a conexão após a autenticação:
+
+ping
+
+Você deve receber a resposta: pong.
+
+7️⃣ Saia do cliente Redis:
+
+quit
+
+Observações:
+
+Se você não conseguir se conectar ao Redis ou se a autenticação falhar, verifique se a senha está correta no arquivo de configuração do Redis e se o serviço está em execução.
+Se você não definiu uma senha para o Redis, o comando auth não será necessário. No entanto, é altamente recomendável definir uma senha para proteger seu banco de dados.
+Para obter mais informações sobre como configurar e gerenciar o Redis, consulte a documentação oficial: https://redis.io/docs/
+Com este teste, você confirma que o Redis está funcionando corretamente e que a senha de autenticação está configurada e ativa. ✅
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+8️⃣ Limpe mídias antigas:
+
+Para remover mídias com mais de 30 dias, execute o seguinte comando:
+
+find /home/deploy/*/backend/public -type f -mtime +30 -delete
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+🔥 Particularidades da VPSDime - Preparando o Terreno: 🔥
+
+A VPSDime tem algumas peculiaridades que exigem atenção antes da instalação. Siga estes passos para garantir um processo tranquilo:
+
+1️⃣ Atualize os pacotes do servidor:
+
+sudo apt -y update && apt -y upgrade
+
+2️⃣ Instale e configure o firewall (UFW):
+
+sudo apt-get install ufw
+sudo ufw enable
+
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 3000/tcp
+sudo ufw allow 4000/tcp
+sudo ufw allow 5000/tcp
+sudo ufw allow 5432/tcp
+sudo ufw allow 6379/tcp
+
+sudo ufw status
+
+IMPORTANTE: Libere a porta SSH (22) para não perder o acesso ao servidor! 🧱🔓
+3️⃣ Instale o Curl:
+
+sudo apt-get install curl
+
+4️⃣ Defina a versão do Node.js para a 20:
+
+curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+
+A VPSDime, por padrão, instala a versão 10 do Node.js. Este comando garante que a versão 20 seja instalada. ⚙️
+Observações:
+
+O UFW é um firewall simples e eficiente para proteger seu servidor.
+O Curl é uma ferramenta para transferir dados de ou para um servidor, e será usado para instalar a versão correta do Node.js.
+A versão 20 do Node.js oferece melhor desempenho e compatibilidade com as bibliotecas mais recentes.
+Seguindo estas instruções, você terá o ambiente da VPSDime pronto para a instalação da sua aplicação! 🚀
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+💣 Deletar e Recriar o Banco de Dados: 💣
+
+Em alguns casos, pode ser necessário deletar e recriar o banco de dados para corrigir problemas ou reiniciar a aplicação do zero. Siga este guia com atenção:
+
+1️⃣ Pare as aplicações:
+
+su deploy
+pm2 stop all
+exit
+
+2️⃣ Acesse o PostgreSQL como usuário "postgres":
+
+sudo su - postgres
+
+3️⃣ Delete o banco de dados:
+
+SQL
+dropdb *nomedoapp*;
+
+4️⃣ Recrie o banco de dados:
+
+SQL
+createdb *nomedoapp*;
+
+5️⃣ Crie o usuário e defina a senha:
+
+SQL
+psql
+CREATE USER *nomedoapp* SUPERUSER INHERIT CREATEDB CREATEROLE;
+ALTER USER *nomedoapp* PASSWORD '*senhadeploy*';
+\q
+exit
+
+Substitua *nomedoapp* pelo nome do seu app e *senhadeploy* pela senha do usuário deploy.
+
+6️⃣ Execute as migrações e seeders:
+
+su deploy
+cd /home/deploy/*nomedoapp*/backend
+
+npx sequelize db:migrate
+npx sequelize db:seed:all
+
+Substitua *nomedoapp* pelo nome do seu app.
+
+7️⃣ Reinicie as aplicações:
+
+su deploy
+cd
+pm2 restart all
+
+Observações:
+
+Faça backup do seu banco de dados antes de deletá-lo! ⚠️
+Este procedimento apagará todos os dados do banco de dados.
+Certifique-se de ter as credenciais corretas do banco de dados antes de prosseguir.
+Se você tiver dúvidas, consulte a documentação ou procure ajuda no suporte técnico.
+Com este guia, você poderá deletar e recriar o banco de dados do seu aplicativo de forma segura. 🗑️🔄

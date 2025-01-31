@@ -1,0 +1,59 @@
+⚠️ Atenção! ⚠️
+
+No Ubuntu 22, o script de instalação pode encontrar dificuldades para criar o usuário "deploy". Para evitar problemas, siga estas etapas para criá-lo manualmente antes de iniciar a instalação:
+
+1️⃣ Acesse o terminal SSH e atualize o servidor:
+
+sudo apt -y update && apt -y upgrade
+
+2️⃣ Crie o usuário "deploy" manualmente:
+
+adduser deploy
+
+Defina uma senha segura para o usuário. 🔑
+Pressione "Enter" para pular os campos de dados pessoais.
+
+3️⃣ Adicione o usuário "deploy" ao grupo sudo:
+
+usermod -aG sudo deploy
+
+ou
+
+adduser deploy sudo
+
+Isso permitirá que o usuário "deploy" execute comandos com privilégios de administrador. 🧑‍🔧
+
+4️⃣ Baixe o instalador:
+
+cd /home
+ls
+sudo apt install -y git && git clone https://github.com/launcherbr/instalador.git instalador && sudo chmod -R 777 instalador && cd instalador && sudo ./install_primaria
+
+Observações:
+
+Certifique-se de que o usuário "deploy" tenha sido criado com sucesso e que ele pertença ao grupo sudo antes de prosseguir com a instalação.
+Anote a senha do usuário "deploy", pois você precisará dela durante a instalação.
+Seguindo estas etapas, você garante que a instalação ocorra sem problemas no Ubuntu 22. 😉
+
+⚠️ Clonando Repositórios Privados no Ubuntu 22: ⚠️
+
+O Ubuntu 22 pode apresentar problemas ao tentar clonar repositórios privados diretamente do GitHub. Para contornar essa dificuldade, utilize a função "Import repository" do GitHub para clonar o repositório privado como um repositório público na sua conta.
+
+Siga estes passos:
+
+Acesse o GitHub e faça login na sua conta.
+Clique no ícone "+" no canto superior direito da tela e selecione "Import repository".
+Cole a URL do repositório privado que você deseja clonar.
+Dê um nome ao novo repositório público e escolha se ele será público ou privado.
+⚠️ IMPORTANTE: Para este caso, escolha a opção "Público".
+Clique em "Begin import".
+O GitHub importará o repositório privado para sua conta como um repositório público.
+
+Agora, utilize o repositório público no seu servidor Ubuntu 22:
+
+Observações:
+
+Após clonar o repositório, você poderá torná-lo privado novamente nas configurações do repositório no GitHub.
+Essa solução é uma alternativa para clonar repositórios privados no Ubuntu 22 quando a autenticação direta não funciona.
+Lembre-se de que, ao tornar o repositório público, qualquer pessoa poderá acessá-lo durante o processo de clonagem.
+Com este método, você poderá clonar repositórios privados no Ubuntu 22 sem problemas de autenticação. 😉

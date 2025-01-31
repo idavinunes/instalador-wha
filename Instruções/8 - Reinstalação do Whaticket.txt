@@ -1,0 +1,79 @@
+🔄 Reinstalando o Whaticket 🔄
+
+Se você precisar reinstalar o Whaticket, siga este guia passo-a-passo para garantir que tudo ocorra sem problemas:
+
+1️⃣ Backup dos Dados Essenciais: 💾
+
+Anote as informações importantes dos arquivos .env: 📝
+
+Nome do app 🏷️
+Senha do usuário "deploy" 🔑
+Domínio do frontend 🌐
+Domínio do backend ⚙️
+Portas do backend, frontend e agendamento redis 🚪
+Salve as personalizações: 🎨
+
+Arquivos de assets e public (imagens, logos, midias do whatsapp, etc.) 🖼️
+Nome do app 🏷️
+Cor primária 🎨
+
+2️⃣ Parando e Excluindo as Aplicações: 🛑
+
+su deploy
+pm2 stop all
+pm2 flush 0
+pm2 flush 1
+pm2 del 0
+pm2 del 1
+pm2 save --force
+
+3️⃣ Deletando os Arquivos: 🗑️
+
+cd /home/deploy
+ls
+rm -rf "nome" 
+
+Substitua "nome" pelo nome da sua aplicação.
+
+4️⃣ Remova o container docker do Redis
+
+su root
+
+docker ps
+
+anote o id referente ao redis.
+
+docker stop id-do-redis
+docker rm id-do-redis
+
+5️⃣ Reinstalando com o Instalador: 💿
+
+cd /home/instalador
+./install_primaria
+
+Caso precise remover o instalador:
+
+cd /home
+rm -rf instalador
+
+Baixe o instalador (se necessário):
+
+sudo apt install -y git && git clone https://github.com/launcherbr/instalador.git instalador && sudo chmod -R 777 instalador && cd instalador && sudo ./install_primaria
+
+Preenchendo os Dados da Instalação: 📝
+
+Utilize os dados que você anotou no passo 1:
+Senha do deploy 🔑
+Nome do app 🏷️
+Domínio do frontend 🌐
+Domínio do backend ⚙️
+
+6️⃣ Restaurando as Personalizações: 🎨
+
+Após a reinstalação, restaure os arquivos de assets e public, o nome do app e a cor primária que você salvou no passo 1.
+Observações:
+
+Faça backup de todos os seus dados importantes antes de reinstalar o Whaticket.
+Certifique-se de ter acesso aos arquivos de personalização e aos dados do arquivo .env antes de iniciar o processo.
+Se você tiver dúvidas, consulte a documentação ou procure ajuda no suporte técnico.
+Com este guia, você poderá reinstalar o Whaticket de forma fácil e segura. 😉

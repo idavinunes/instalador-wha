@@ -1,0 +1,74 @@
+🔄 Atualização do Whaticket 🔄
+
+Se você precisar atualizar o Whaticket, siga este guia passo-a-passo para garantir que tudo ocorra sem problemas:
+
+Pré-requisitos:
+
+Realize todas as alterações apenas com o usuário deploy. ⚙️
+
+O usuário root é de uso exclusivo no instalador. 🧰
+
+1️⃣ Backup dos Dados Essenciais: 💾
+
+Dentro das pastas backend e frontend, faça backup dos arquivos .env. 📝
+Na pasta backend, faça backup dos arquivos da pasta public. 🌐
+Salve as personalizações: 🎨
+Arquivos de assets e public (imagens, logos, midias do whatsapp, etc.) 🖼️
+Nome do app 🏷️
+Cor primária 🎨
+
+2️⃣ Parando as Aplicações: 🛑
+
+su deploy
+pm2 stop all
+
+3️⃣ Deletando os Arquivos: 🗑️
+
+cd /home/deploy
+ls
+rm -rf "nome" 
+
+Substitua "nome" pelo nome da sua aplicação.
+
+4️⃣ Clonar o repositório do GitHub; Ainda no diretório home do usuário deploy, clone o repositório:
+
+git clone https://github.com/launcherbr/whaticketsaas.git "nome"
+
+5️⃣ Recuperar os arquivos de backup
+
+Copie de volta os arquivos .env para as pastas backend e frontend. ⚙️
+
+Copie de volta os arquivos da pasta public para a pasta backend. 🌐
+
+6️⃣ Atualizando com o Instalador: 💿
+
+Voltar ao usuário root
+
+su root ou exit
+
+cd /home/instalador
+./install_primaria
+
+Caso precise remover o instalador:
+
+cd /home
+rm -rf instalador
+
+Baixe o instalador (se necessário):
+
+sudo apt install -y git && git clone https://github.com/launcherbr/instalador.git instalador && sudo chmod -R 777 instalador && cd instalador && sudo ./install_primaria
+
+Escolha a opção de atualização: 📝
+
+Informe o nome da sua instancia. 🏷️
+
+6️⃣ Restaurando as Personalizações: 🎨
+
+Após a atualização, restaure os arquivos de assets e public, o nome do app e a cor primária que você salvou no passo 1.
+
+Observações:
+
+Faça backup de todos os seus dados importantes antes de atualizar o Whaticket.
+Certifique-se de ter acesso aos arquivos de personalização e aos dados do arquivo .env antes de iniciar o processo.
+Se você tiver dúvidas, consulte a documentação ou procure ajuda no suporte técnico.
+Com este guia, você poderá atualizar o Whaticket de forma fácil e segura. 😉

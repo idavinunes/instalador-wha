@@ -1,0 +1,47 @@
+👋 Mensagens Prontas para Conexões e Filas: 👋
+
+Aqui estão algumas sugestões de mensagens com emojis para usar em suas conexões e filas, personalizadas para diferentes situações:
+
+1 - Conexões:
+
+Boas-vindas e opções:
+✨ Bem-vindo(a) à empresa! ✨ Escolha uma das opções abaixo para que possamos te ajudar da melhor maneira: 👇
+
+Horário de funcionamento:
+😊 Obrigado(a) por entrar em contato com a empresa! 😊 Nosso horário de funcionamento é de segunda a sexta-feira, das 8h às 12h e das 14h às 18h ⏰, e aos sábados das 9h às 13h. 📅
+
+Solicitação de avaliação (após o atendimento):
+🙏 Agradecemos por escolher a empresa! 🙏  Sua opinião é muito importante para nós. 🤩 Por favor, reserve alguns minutinhos para avaliar nosso atendimento. ⏱️
+
+Avaliação detalhada (com critérios):
+🌟 Agradecemos por entrar em contato com a empresa! 🌟  Para nos ajudar a melhorar, avalie seu atendimento de 1 a 3: 👇
+
+1️⃣ Insatisfeito(a) 😔
+2️⃣ Satisfeito(a) 🙂
+3️⃣ Muito satisfeito(a) 😄
+
+Responda com o número que representa sua experiência! 😉
+
+Despedida e agradecimento:
+👋 Obrigado(a) por entrar em contato com a empresa! 😊 Foi um prazer te ajudar! 😄  Se precisar de ajuda no futuro, pode nos chamar de novo. 😉 Tenha um ótimo dia! ☀️
+
+2 - Filas:
+
+Disponibilidade imediata:
+👋 Olá, {{name}}! 😊 Seja bem-vindo(a) à empresa! 😄 Nossos atendentes estão prontos para te ajudar agora mesmo. 🧑‍💻 Aguarde um momentinho e já te direcionamos para um especialista. 😉
+
+Direcionamento para o departamento responsável:
+Olá, {{name}}! 👋 Seja bem-vindo(a) ao departamento da empresa! 😊 Para que você seja atendido(a) da melhor forma, vamos te direcionar para o departamento responsável. 🔄 Seu protocolo de atendimento é {{protocol}}. 🎫 Aguarde um instante que em breve um de nossos especialistas entrará em contato. 😉
+
+Departamento indisponível:
+😥 Pedimos desculpas, mas no momento o departamento não está disponível. 😔 Nosso horário de atendimento é de segunda a sexta-feira, das 8h às 18h ⏰, e aos sábados, das 8h às 12h. 📅  Por favor, aguarde nosso retorno para que possamos te atender. 😊
+
+Horário de atendimento:
+⏰ Nosso horário de atendimento é de segunda a sexta-feira, das 8h às 18h, e aos sábados, das 8h às 12h. 📅  Durante esse período, nossa equipe estará pronta para te ajudar com qualquer dúvida ou necessidade. 😊
+
+Lembre-se:
+
+Adapte as mensagens com o nome da sua empresa, departamento e horários de atendimento.
+Use emojis com moderação para não sobrecarregar a mensagem.
+Mantenha a linguagem clara, objetiva e acolhedora.
+Com essas mensagens personalizadas e cheias de emojis, seus clientes se sentirão mais acolhidos e satisfeitos com o atendimento! 😄
